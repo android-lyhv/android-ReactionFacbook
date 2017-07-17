@@ -2,8 +2,10 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/width_title"
     android:layout_height="@dimen/height_title"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/background_tv_reaction"
     android:gravity="center"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
+    tools:text="like"
     android:textColor="@android:color/white" />
