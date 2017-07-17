@@ -206,7 +206,7 @@ public class ReactionView extends View {
     }
 
     public void onBackToNormal() {
-
+        // TODO set normal size
     }
 
     @Override
@@ -257,7 +257,6 @@ public class ReactionView extends View {
             beforeAnimateBeginning();
             setDuration(DURATION_BEGINNING_ANIMATION);
         }
-
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t) {
             calculateInSessionBeginning(interpolatedTime);
