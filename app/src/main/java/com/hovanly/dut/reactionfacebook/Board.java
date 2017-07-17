@@ -9,8 +9,7 @@ import android.graphics.RectF;
  * Copyright@ AsianTech.Inc
  * Created by Ly Ho V. on 14/07/2017
  */
-class Board {
-
+public class Board {
     public static final int BOARD_WIDTH = 6 * Emotion.NORMAL_SIZE + 7 * CommonDimen.DIVIDE; //DIVIDE = 5dp, Emotion.NORMAL_SIZE = 40dp
 
     public static final int BOARD_HEIGHT_NORMAL = DisplayUtils.dpToPx(50);
@@ -25,19 +24,19 @@ class Board {
 
     public static final float BASE_LINE = BOARD_Y + Emotion.NORMAL_SIZE + CommonDimen.DIVIDE;
 
-    public Paint boardPaint;
+    private float currentHeight = BOARD_HEIGHT_NORMAL;
 
-    public float currentHeight = BOARD_HEIGHT_NORMAL;
+    private float currentY = BOARD_Y;
 
-    public float currentY = BOARD_Y;
+    private float beginHeight;
 
-    public float beginHeight;
+    private float endHeight;
 
-    public float endHeight;
+    private float beginY;
 
-    public float beginY;
+    private float endY;
 
-    public float endY;
+    private Paint boardPaint;
 
 
     public Board(Context context) {
@@ -65,5 +64,53 @@ class Board {
         float radius = currentHeight / 2;
         RectF board = new RectF(BOARD_X, currentY, BOARD_X + BOARD_WIDTH, currentY + currentHeight);
         canvas.drawRoundRect(board, radius, radius, boardPaint);
+    }
+
+    public float getCurrentY() {
+        return currentY;
+    }
+
+    public void setCurrentY(float currentY) {
+        this.currentY = currentY;
+    }
+
+    public float getBeginHeight() {
+        return beginHeight;
+    }
+
+    public void setBeginHeight(float beginHeight) {
+        this.beginHeight = beginHeight;
+    }
+
+    public float getEndHeight() {
+        return endHeight;
+    }
+
+    public void setEndHeight(float endHeight) {
+        this.endHeight = endHeight;
+    }
+
+    public float getBeginY() {
+        return beginY;
+    }
+
+    public void setBeginY(float beginY) {
+        this.beginY = beginY;
+    }
+
+    public float getEndY() {
+        return endY;
+    }
+
+    public void setEndY(float endY) {
+        this.endY = endY;
+    }
+
+    public Paint getBoardPaint() {
+        return boardPaint;
+    }
+
+    public void setBoardPaint(Paint boardPaint) {
+        this.boardPaint = boardPaint;
     }
 }

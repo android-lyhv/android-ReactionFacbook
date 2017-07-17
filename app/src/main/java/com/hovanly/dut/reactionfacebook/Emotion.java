@@ -14,36 +14,27 @@ import android.widget.TextView;
  * Copyright@ AsianTech.Inc
  * Created by Ly Ho V. on 14/07/2017
  */
-class Emotion {
+public class Emotion {
     public static final int MINIMAL_SIZE = DisplayUtils.dpToPx(28);
     public static final int NORMAL_SIZE = DisplayUtils.dpToPx(40);
     public static final int CHOOSE_SIZE = DisplayUtils.dpToPx(100);
     public static final int DISTANCE = DisplayUtils.dpToPx(15);
     public static final int MAX_WIDTH_TITLE = DisplayUtils.dpToPx(70);
-    public int currentSize = NORMAL_SIZE;
+    private int currentSize = NORMAL_SIZE;
     private Context mContext;
-    public int beginSize;
+    private int beginSize;
+    private int endSize;
+    private float currentX;
+    private float currentY;
+    private float beginY;
+    private float endY;
+    private Bitmap imageEmotion;
+    private Bitmap imageTitle;
+    private Paint emotionPaint;
+    private Paint titlePaint;
+    private float ratioWH;
 
-    public int endSize;
-
-    public float currentX;
-
-    public float currentY;
-
-    public float beginY;
-
-    public float endY;
-
-    public Bitmap imageEmotion;
-
-    public Bitmap imageTitle;
-
-    public Paint emotionPaint;
-
-    public Paint titlePaint;
-
-    public float ratioWH;
-    public Emotion(Context context, String title, int imageResource) {
+    Emotion(Context context, String title, int imageResource) {
         mContext = context;
         imageEmotion = BitmapFactory.decodeResource(context.getResources(), imageResource);
         emotionPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
@@ -68,7 +59,7 @@ class Emotion {
         titleView.draw(c);
     }
 
-    public void setAlphaTitle(int alpha) {
+    private void setAlphaTitle(int alpha) {
         titlePaint.setAlpha(alpha);
     }
 
@@ -77,7 +68,7 @@ class Emotion {
         drawTitle(canvas);
     }
 
-    public void drawTitle(Canvas canvas) {
+    private void drawTitle(Canvas canvas) {
         int width = (currentSize - NORMAL_SIZE) * 7 / 6;
         int height = (int) (width / ratioWH);
 
@@ -93,7 +84,111 @@ class Emotion {
         canvas.drawBitmap(imageTitle, null, new RectF(x, y, x + width, y + height), titlePaint);
     }
 
-    public Context getContext() {
+    private Context getContext() {
         return mContext;
+    }
+
+    public int getCurrentSize() {
+        return currentSize;
+    }
+
+    public void setCurrentSize(int currentSize) {
+        this.currentSize = currentSize;
+    }
+
+    public Context getmContext() {
+        return mContext;
+    }
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    public int getBeginSize() {
+        return beginSize;
+    }
+
+    public void setBeginSize(int beginSize) {
+        this.beginSize = beginSize;
+    }
+
+    public int getEndSize() {
+        return endSize;
+    }
+
+    public void setEndSize(int endSize) {
+        this.endSize = endSize;
+    }
+
+    public float getCurrentX() {
+        return currentX;
+    }
+
+    public void setCurrentX(float currentX) {
+        this.currentX = currentX;
+    }
+
+    public float getCurrentY() {
+        return currentY;
+    }
+
+    public void setCurrentY(float currentY) {
+        this.currentY = currentY;
+    }
+
+    public float getBeginY() {
+        return beginY;
+    }
+
+    public void setBeginY(float beginY) {
+        this.beginY = beginY;
+    }
+
+    public float getEndY() {
+        return endY;
+    }
+
+    public void setEndY(float endY) {
+        this.endY = endY;
+    }
+
+    public Bitmap getImageEmotion() {
+        return imageEmotion;
+    }
+
+    public void setImageEmotion(Bitmap imageEmotion) {
+        this.imageEmotion = imageEmotion;
+    }
+
+    public Bitmap getImageTitle() {
+        return imageTitle;
+    }
+
+    public void setImageTitle(Bitmap imageTitle) {
+        this.imageTitle = imageTitle;
+    }
+
+    public Paint getEmotionPaint() {
+        return emotionPaint;
+    }
+
+    public void setEmotionPaint(Paint emotionPaint) {
+        this.emotionPaint = emotionPaint;
+    }
+
+    public Paint getTitlePaint() {
+        return titlePaint;
+    }
+
+    public void setTitlePaint(Paint titlePaint) {
+        this.titlePaint = titlePaint;
+    }
+
+    public float getRatioWH() {
+        return ratioWH;
+    }
+
+    public void setRatioWH(float ratioWH) {
+        this.ratioWH = ratioWH;
     }
 }

@@ -1,7 +1,6 @@
 package com.hovanly.dut.reactionfacebook;
 
 public class EaseOutBack {
-
     private final float s = 1.70158f;
     private final long duration;
     private final float begin;

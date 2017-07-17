@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.hovanly.dut.reactionfacebook.CommonDimen.DIVIDE;
 
 enum StateDraw {
@@ -28,7 +31,7 @@ public class ReactionView extends View {
     private static final long DURATION_BEGINNING_EACH_ITEM = 200;
     private EaseOutBack easeOutBack;
     private Board mBoard;
-    private Emotion[] mEmotions = new Emotion[6];
+    private List<Emotion> mEmotions = new ArrayList<>();
     private StateDraw mStateDraw = StateDraw.BEGIN;
     private int currentPosition = 0;
     public ReactionView(Context context) {
@@ -43,30 +46,20 @@ public class ReactionView extends View {
 
     private void init() {
         mBoard = new Board(getContext());
-        setLayerType(LAYER_TYPE_SOFTWARE, mBoard.boardPaint);
-
-        mEmotions[0] = new Emotion(getContext(), "Like", R.drawable.ic_like);
-        mEmotions[1] = new Emotion(getContext(), "Love", R.drawable.ic_love);
-        mEmotions[2] = new Emotion(getContext(), "Haha", R.drawable.ic_haha);
-        mEmotions[3] = new Emotion(getContext(), "Wow", R.drawable.ic_wow);
-        mEmotions[4] = new Emotion(getContext(), "Cry", R.drawable.ic_cry);
-        mEmotions[5] = new Emotion(getContext(), "Angry", R.drawable.ic_angry);
-
-        //BEGIN: Đoạn này để đặt các thành phần vào vị trí ban đầu để xem kết quả thui,
-        //chứ các thành phần ban đầu sẽ bị ẩn đi, vì chưa click like mà :D
-        for (int i = 0; i < mEmotions.length; i++) {
-            mEmotions[i].currentY = Board.BASE_LINE - Emotion.NORMAL_SIZE;
-            mEmotions[i].currentX = i == 0 ? Board.BOARD_X + DIVIDE : mEmotions[i - 1].currentX + mEmotions[i - 1].currentSize + DIVIDE;
-        }
-        //END
-
+        setLayerType(LAYER_TYPE_SOFTWARE, mBoard.getBoardPaint());
+        mEmotions.add(new Emotion(getContext(), "Like", R.drawable.ic_like));
+        mEmotions.add(new Emotion(getContext(), "Love", R.drawable.ic_love));
+        mEmotions.add(new Emotion(getContext(), "Haha", R.drawable.ic_haha));
+        mEmotions.add(new Emotion(getContext(), "Wow", R.drawable.ic_wow));
+        mEmotions.add(new Emotion(getContext(), "Cry", R.drawable.ic_cry));
+        mEmotions.add(new Emotion(getContext(), "Angry", R.drawable.ic_angry));
         initElement();
     }
 
     private void initElement() {
-        mBoard.currentY = CommonDimen.HEIGHT_VIEW_REACTION + 10;
-        for (Emotion e : mEmotions) {
-            e.currentY = mBoard.currentY + CommonDimen.DIVIDE;
+        mBoard.setCurrentY(CommonDimen.HEIGHT_VIEW_REACTION + 10);
+        for (Emotion emotion : mEmotions) {
+            emotion.setCurrentY(mBoard.getCurrentY() + CommonDimen.DIVIDE);
         }
     }
 
@@ -79,109 +72,119 @@ public class ReactionView extends View {
     }
 
     private void beforeAnimateBeginning() {
-        mBoard.beginHeight = Board.BOARD_HEIGHT_NORMAL;
-        mBoard.endHeight = Board.BOARD_HEIGHT_NORMAL;
-
-        mBoard.beginY = Board.BOARD_BOTTOM + 150;
-        mBoard.endY = Board.BOARD_Y;
-
-        easeOutBack = EaseOutBack.newInstance(DURATION_BEGINNING_EACH_ITEM, Math.abs(mBoard.beginY - mBoard.endY), 0);
-
-        for (int i = 0; i < mEmotions.length; i++) {
-            mEmotions[i].endY = Board.BASE_LINE - Emotion.NORMAL_SIZE;
-            mEmotions[i].beginY = Board.BOARD_BOTTOM + 150;
-            mEmotions[i].currentX = i == 0 ? Board.BOARD_X + DIVIDE : mEmotions[i - 1].currentX + mEmotions[i - 1].currentSize + DIVIDE;
+        mBoard.setBeginHeight(Board.BOARD_HEIGHT_NORMAL);
+        mBoard.setEndHeight(Board.BOARD_HEIGHT_NORMAL);
+        mBoard.setBeginY(Board.BOARD_BOTTOM + 150);
+        mBoard.setEndY(Board.BOARD_Y);
+        easeOutBack = EaseOutBack.newInstance(DURATION_BEGINNING_EACH_ITEM, Math.abs(mBoard.getBeginY() - mBoard.getEndY()), 0);
+        int size = mEmotions.size();
+        for (int i = 0; i < size; i++) {
+            mEmotions.get(i).setEndY(Board.BASE_LINE - Emotion.NORMAL_SIZE);
+            mEmotions.get(i).setBeginY(Board.BOARD_BOTTOM + 150);
+            if (i == 0) {
+                mEmotions.get(i).setCurrentX(Board.BOARD_X + DIVIDE);
+            } else {
+                mEmotions.get(i).setCurrentX(mEmotions.get(i - 1).getCurrentX() + mEmotions.get(i - 1).getCurrentSize()+ DIVIDE);
+            }
         }
     }
 
     private void beforeAnimateChoosing() {
-        mBoard.beginHeight = mBoard.getCurrentHeight();
-        mBoard.endHeight = Board.BOARD_HEIGHT_MINIMAL;
-        for (int i = 0; i < mEmotions.length; i++) {
-            mEmotions[i].beginSize = mEmotions[i].currentSize;
+        mBoard.setBeginHeight(mBoard.getCurrentHeight());
+        mBoard.setEndHeight(Board.BOARD_HEIGHT_MINIMAL);
+        int size = mEmotions.size();
+        for (int i = 0; i < size; i++) {
+            mEmotions.get(i).setBeginSize(mEmotions.get(i).getCurrentSize());
             if (i == currentPosition) {
-                mEmotions[i].endSize = Emotion.CHOOSE_SIZE;
+                mEmotions.get(i).setEndSize(Emotion.CHOOSE_SIZE);
             } else {
-                mEmotions[i].endSize = Emotion.MINIMAL_SIZE;
+                mEmotions.get(i).setEndSize(Emotion.MINIMAL_SIZE);
             }
         }
     }
 
     private void beforeAnimateNormalBack() {
-        mBoard.beginHeight = mBoard.getCurrentHeight();
-        mBoard.endHeight = Board.BOARD_HEIGHT_NORMAL;
+        mBoard.setBeginHeight(mBoard.getCurrentHeight());
+        mBoard.setEndHeight(Board.BOARD_HEIGHT_NORMAL);
         for (Emotion mEmotion : mEmotions) {
-            mEmotion.beginSize = mEmotion.currentSize;
-            mEmotion.endSize = Emotion.NORMAL_SIZE;
+            mEmotion.setBeginSize(mEmotion.getCurrentSize());
+            mEmotion.setEndSize(Emotion.NORMAL_SIZE);
         }
     }
 
     private void calculateInSessionChoosingAndEnding(float interpolatedTime) {
-        mBoard.setCurrentHeight(mBoard.beginHeight + (int) (interpolatedTime * (mBoard.endHeight - mBoard.beginHeight)));
-        for (int i = 0; i < mEmotions.length; i++) {
-            mEmotions[i].currentSize = calculateSize(i, interpolatedTime);
-            mEmotions[i].currentY = Board.BASE_LINE - mEmotions[i].currentSize;
+        mBoard.setCurrentHeight(mBoard.getBeginHeight() + (int) (interpolatedTime * (mBoard.getEndHeight() - mBoard.getBeginHeight())));
+        for (int i = 0; i < mEmotions.size(); i++) {
+            mEmotions.get(i).setCurrentSize(calculateSize(i, interpolatedTime));
+            mEmotions.get(i).setCurrentY(Board.BASE_LINE - mEmotions.get(i).getCurrentSize());
         }
         calculateCoordinateX();
         invalidate();
     }
 
     private int calculateSize(int position, float interpolatedTime) {
-        int changeSize = mEmotions[position].endSize - mEmotions[position].beginSize;
-        return mEmotions[position].beginSize + (int) (interpolatedTime * changeSize);
+        int changeSize = mEmotions.get(position).getEndSize() - mEmotions.get(position).getBeginSize();
+        return mEmotions.get(position).getBeginSize() + (int) (interpolatedTime * changeSize);
     }
 
     private void calculateInSessionBeginning(float interpolatedTime) {
         float currentTime = interpolatedTime * DURATION_BEGINNING_ANIMATION;
-
         if (currentTime > 0) {
-            mBoard.currentY = mBoard.endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime, DURATION_BEGINNING_EACH_ITEM));
+            float value = mBoard.getEndY() + easeOutBack.getCoordinateYFromTime(Math.min(currentTime, DURATION_BEGINNING_EACH_ITEM));
+            mBoard.setCurrentY(value);
         }
-
         if (currentTime >= 100) {
-            mEmotions[0].currentY = mEmotions[0].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 100, DURATION_BEGINNING_EACH_ITEM));
+            float value = mEmotions.get(0).getEndY() + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 100, DURATION_BEGINNING_EACH_ITEM));
+            mEmotions.get(0).setCurrentY(value);
         }
 
         if (currentTime >= 200) {
-            mEmotions[1].currentY = mEmotions[1].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 200, DURATION_BEGINNING_EACH_ITEM));
+            float value = mEmotions.get(1).getEndY() + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 200, DURATION_BEGINNING_EACH_ITEM));
+            mEmotions.get(1).setCurrentY(value);
         }
 
         if (currentTime >= 300) {
-            mEmotions[2].currentY = mEmotions[2].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 300, DURATION_BEGINNING_EACH_ITEM));
+            float value = mEmotions.get(2).getEndY() + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 300, DURATION_BEGINNING_EACH_ITEM));
+            mEmotions.get(2).setCurrentY(value);
         }
 
         if (currentTime >= 400) {
-            mEmotions[3].currentY = mEmotions[3].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 400, DURATION_BEGINNING_EACH_ITEM));
+            float value = mEmotions.get(3).getEndY() + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 400, DURATION_BEGINNING_EACH_ITEM));
+            mEmotions.get(3).setCurrentY(value);
         }
 
         if (currentTime >= 500) {
-            mEmotions[4].currentY = mEmotions[4].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 500, DURATION_BEGINNING_EACH_ITEM));
+            float value = mEmotions.get(4).getEndY() + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 500, DURATION_BEGINNING_EACH_ITEM));
+            mEmotions.get(4).setCurrentY(value);
         }
 
         if (currentTime >= 600) {
-            mEmotions[5].currentY = mEmotions[5].endY + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 600, DURATION_BEGINNING_EACH_ITEM));
+            float value = mEmotions.get(5).getEndY() + easeOutBack.getCoordinateYFromTime(Math.min(currentTime - 600, DURATION_BEGINNING_EACH_ITEM));
+            mEmotions.get(5).setCurrentY(value);
         }
-
         invalidate();
     }
 
     private void calculateCoordinateX() {
-        mEmotions[0].currentX = Board.BOARD_X + DIVIDE;
-        mEmotions[mEmotions.length - 1].currentX = Board.BOARD_X + Board.BOARD_WIDTH - DIVIDE - mEmotions[mEmotions.length - 1].currentSize;
+        int size = mEmotions.size();
+        mEmotions.get(0).setCurrentX(Board.BOARD_X + DIVIDE);
+        mEmotions.get(size - 1).setCurrentX(Board.BOARD_X + Board.BOARD_WIDTH - DIVIDE - mEmotions.get(size - 1).getCurrentSize());
 
         for (int i = 1; i < currentPosition; i++) {
-            mEmotions[i].currentX = mEmotions[i - 1].currentX + mEmotions[i - 1].currentSize + DIVIDE;
+            mEmotions.get(i).setCurrentX(mEmotions.get(i - 1).getCurrentX() + mEmotions.get(i - 1).getCurrentSize() + DIVIDE);
         }
 
-        for (int i = mEmotions.length - 2; i > currentPosition; i--) {
-            mEmotions[i].currentX = mEmotions[i + 1].currentX - mEmotions[i].currentSize - DIVIDE;
+        for (int i = size - 2; i > currentPosition; i--) {
+            mEmotions.get(i).setCurrentX(mEmotions.get(i + 1).getCurrentX() - mEmotions.get(i).getCurrentSize() - DIVIDE);
         }
 
-        if (currentPosition != 0 && currentPosition != mEmotions.length - 1) {
-            if (currentPosition <= (mEmotions.length / 2 - 1)) {
-                mEmotions[currentPosition].currentX = mEmotions[currentPosition - 1].currentX + mEmotions[currentPosition - 1].currentSize + DIVIDE;
+        if (currentPosition != 0 && currentPosition != size - 1) {
+            if (currentPosition <= (size / 2 - 1)) {
+                float value = mEmotions.get(currentPosition - 1).getCurrentX() + mEmotions.get(currentPosition - 1).getCurrentSize() + DIVIDE;
+                mEmotions.get(currentPosition).setCurrentX(value);
             } else {
-                mEmotions[currentPosition].currentX = mEmotions[currentPosition + 1].currentX - mEmotions[currentPosition].currentSize - DIVIDE;
+                float value = mEmotions.get(currentPosition + 1).getCurrentX() - mEmotions.get(currentPosition).getCurrentSize() - DIVIDE;
+                mEmotions.get(currentPosition).setCurrentX(value);
             }
         }
     }
@@ -214,8 +217,8 @@ public class ReactionView extends View {
                 handled = true;
                 break;
             case MotionEvent.ACTION_MOVE:
-                for (int i = 0; i < mEmotions.length; i++) {
-                    if (event.getX() > mEmotions[i].currentX && event.getX() < mEmotions[i].currentX + mEmotions[i].currentSize) {
+                for (int i = 0; i < mEmotions.size(); i++) {
+                    if (event.getX() > mEmotions.get(i).getCurrentX() && event.getX() < mEmotions.get(i).getCurrentX() + mEmotions.get(i).getCurrentSize()) {
                         onEmotionSelected(i);
                         break;
                     }
@@ -250,7 +253,6 @@ public class ReactionView extends View {
     }
 
     class BeginningAnimation extends Animation {
-
         public BeginningAnimation() {
             beforeAnimateBeginning();
             setDuration(DURATION_BEGINNING_ANIMATION);
