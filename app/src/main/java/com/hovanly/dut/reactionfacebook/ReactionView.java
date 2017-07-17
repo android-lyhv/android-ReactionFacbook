@@ -22,7 +22,7 @@ enum StateDraw {
  * Created by Ly Ho V. on 14/07/2017
  */
 public class ReactionView extends View {
-    public static final long DURATION_ANIMATION = 200;
+    public static final long DURATION_ANIMATION = 300;
     public static final long DURATION_BEGINNGING_EACH_ITE = 300;
     public static final long DURATION_BEGINNING_ANIMATION = 900;
     private static final long DURATION_BEGINNING_EACH_ITEM = 200;
@@ -50,7 +50,7 @@ public class ReactionView extends View {
         mEmotions[2] = new Emotion(getContext(), "Haha", R.drawable.ic_haha);
         mEmotions[3] = new Emotion(getContext(), "Wow", R.drawable.ic_wow);
         mEmotions[4] = new Emotion(getContext(), "Cry", R.drawable.ic_cry);
-        mEmotions[5] = new Emotion(getContext(), "Angry", R.drawable.ic_haha);
+        mEmotions[5] = new Emotion(getContext(), "Angry", R.drawable.ic_angry);
 
         //BEGIN: Đoạn này để đặt các thành phần vào vị trí ban đầu để xem kết quả thui,
         //chứ các thành phần ban đầu sẽ bị ẩn đi, vì chưa click like mà :D
