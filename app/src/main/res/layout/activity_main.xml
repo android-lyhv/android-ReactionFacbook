@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hovanly.dut.reactionfacebook.ReactionView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.hovanly.dut.reactionfacebook.MainActivity" />
+    android:layout_height="match_parent">
+
+    <com.hovanly.dut.reactionfacebook.ReactionView
+        android:id="@+id/view_reaction"
+        android:layout_width="@dimen/width_view_reaction"
+        android:layout_height="@dimen/height_view_reaction"
+        android:layout_centerInParent="true" />
+
+    <Button
+        android:id="@+id/btn_like"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/view_reaction"
+        android:text="Like" />
+</RelativeLayout>
