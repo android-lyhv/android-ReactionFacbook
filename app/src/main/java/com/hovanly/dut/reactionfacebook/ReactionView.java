@@ -206,6 +206,7 @@ public class ReactionView extends View {
     }
 
     public void onBackToNormal() {
+        invalidate();
         // TODO set normal size
     }
 
